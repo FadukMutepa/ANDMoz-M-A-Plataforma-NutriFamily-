@@ -1,0 +1,577 @@
+{
+  "entities": {
+    "UserWorkspace": {
+      "title": "UserWorkspace",
+      "description": "Perfil de trabalho e estado de inicialização do utilizador autenticado na plataforma ANDMoz M&A.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "roleTitle": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "seeded": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "roleTitle", "seeded", "createdAt", "updatedAt"]
+    },
+    "Goal": {
+      "title": "Goal",
+      "description": "Indicador e meta do quadro lógico de 12 meses do projecto NutriFamily +.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 24,
+          "pattern": "^[A-Z0-9\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "pillar": {
+          "type": "string",
+          "enum": [
+            "Nutrição Materno-Infantil",
+            "Inclusão Produtiva & Hortas",
+            "Resiliência Alimentar & VSLA",
+            "Capacitação Comunitária"
+          ]
+        },
+        "targetValue": {
+          "type": "number"
+        },
+        "currentValue": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "targetMonth": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["No Prazo", "Em Risco", "Concluída"]
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "ownerId",
+        "code",
+        "title",
+        "pillar",
+        "targetValue",
+        "currentValue",
+        "unit",
+        "targetMonth",
+        "status",
+        "notes",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Family": {
+      "title": "Family",
+      "description": "Agregado familiar beneficiário do programa NutriFamily + em Quelimane.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 24,
+          "pattern": "^[A-Z0-9\\-]+$"
+        },
+        "headOfHousehold": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "community": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "clubName": {
+          "type": "string",
+          "enum": [
+            "Clube 1",
+            "Clube 2",
+            "Clube 3",
+            "Clube 4",
+            "Clube 5",
+            "Clube 6",
+            "Clube 7"
+          ]
+        },
+        "membersCount": {
+          "type": "integer"
+        },
+        "childrenUnder5": {
+          "type": "integer"
+        },
+        "hasPcd": {
+          "type": "boolean"
+        },
+        "hasElderly": {
+          "type": "boolean"
+        },
+        "gardenStatus": {
+          "type": "string",
+          "enum": ["Planeada", "Instalada e Funcional", "Em Manutenção"]
+        },
+        "dietaryDiversityImproved": {
+          "type": "boolean"
+        },
+        "hasBioGarden": {
+          "type": "boolean"
+        },
+        "inSavingsGroup": {
+          "type": "boolean"
+        },
+        "multiplierName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "nutritionStatus": {
+          "type": "string",
+          "enum": ["Estável", "Acompanhamento Prioritário", "Graduada"]
+        },
+        "registrationDate": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "enrolledMonth": {
+          "type": "integer"
+        },
+        "adminValidated": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "ownerId",
+        "code",
+        "headOfHousehold",
+        "community",
+        "clubName",
+        "membersCount",
+        "childrenUnder5",
+        "hasPcd",
+        "hasElderly",
+        "gardenStatus",
+        "dietaryDiversityImproved",
+        "hasBioGarden",
+        "inSavingsGroup",
+        "multiplierName",
+        "nutritionStatus",
+        "registrationDate",
+        "notes",
+        "enrolledMonth",
+        "adminValidated",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Multiplier": {
+      "title": "Multiplier",
+      "description": "Multiplicador ou activista comunitário capacitado pela ANDMoz em Quelimane.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 24,
+          "pattern": "^[A-Z0-9\\-]+$"
+        },
+        "fullName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "community": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "clubName": {
+          "type": "string",
+          "enum": [
+            "Clube 1",
+            "Clube 2",
+            "Clube 3",
+            "Clube 4",
+            "Clube 5",
+            "Clube 6",
+            "Clube 7"
+          ]
+        },
+        "specialty": {
+          "type": "string",
+          "enum": ["Nutrição Materno-Infantil", "Agroecologia & Hortas", "Poupança & Resiliência (VSLA)"]
+        },
+        "phone": {
+          "type": "string",
+          "minLength": 6,
+          "maxLength": 30
+        },
+        "trainingStatus": {
+          "type": "string",
+          "enum": ["Em formação", "Certificado"]
+        },
+        "homeVisitsCount": {
+          "type": "integer"
+        },
+        "muacScreeningsCount": {
+          "type": "integer"
+        },
+        "riskCasesReferred": {
+          "type": "integer"
+        },
+        "familiesAssigned": {
+          "type": "integer"
+        },
+        "sessionsHeld": {
+          "type": "integer"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Activo", "Em Formação", "Inactivo"]
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 400
+        },
+        "adminValidated": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "ownerId",
+        "code",
+        "fullName",
+        "community",
+        "clubName",
+        "specialty",
+        "phone",
+        "trainingStatus",
+        "homeVisitsCount",
+        "muacScreeningsCount",
+        "riskCasesReferred",
+        "familiesAssigned",
+        "sessionsHeld",
+        "status",
+        "notes",
+        "adminValidated",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Activity": {
+      "title": "Activity",
+      "description": "Relatório de actividade comunitária realizada no terreno no âmbito do projecto NutriFamily +.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "Demonstração Culinária",
+            "Rastreio Nutricional (MUAC)",
+            "Oficina de Horta Biointensiva",
+            "Formação de Multiplicadores",
+            "Grupo de Poupança e Resiliência"
+          ]
+        },
+        "community": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "activityDate": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "projectMonth": {
+          "type": "integer"
+        },
+        "multiplierName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "womenCount": {
+          "type": "integer"
+        },
+        "menCount": {
+          "type": "integer"
+        },
+        "childrenCount": {
+          "type": "integer"
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 600
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Planeado", "Submetido", "Validado"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "ownerId",
+        "title",
+        "category",
+        "community",
+        "activityDate",
+        "projectMonth",
+        "multiplierName",
+        "womenCount",
+        "menCount",
+        "childrenCount",
+        "summary",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ReportDocument": {
+      "title": "ReportDocument",
+      "description": "Relatório ou documento de actividade submetido pelo Gestor de Projectos para visualização e descarga pelo Administrador.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "docType": {
+          "type": "string",
+          "enum": [
+            "Formação Técnica",
+            "Instalação de Hortas Inclusivas",
+            "Alerta Nutri-SMS / Vigilância Nutricional",
+            "Reunião Clube NutriFamily",
+            "Lista de Presença",
+            "Outro"
+          ]
+        },
+        "activityDate": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 10,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+        },
+        "community": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 80
+        },
+        "projectMonth": {
+          "type": "integer"
+        },
+        "uploadedBy": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "uploadedByRole": {
+          "type": "string",
+          "enum": ["Gestor de Projectos", "Administrador"]
+        },
+        "fileName": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "mimeType": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100
+        },
+        "fileSizeBytes": {
+          "type": "integer"
+        },
+        "contentDataUrl": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 650000
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 600
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Enviado", "Revisto"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "ownerId",
+        "title",
+        "docType",
+        "activityDate",
+        "community",
+        "projectMonth",
+        "uploadedBy",
+        "uploadedByRole",
+        "fileName",
+        "mimeType",
+        "fileSizeBytes",
+        "contentDataUrl",
+        "notes",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserWorkspace"
+      },
+      "description": "Documento de perfil de trabalho por utilizador autenticado."
+    },
+    "/goals/{goalId}": {
+      "schema": {
+        "$ref": "#/entities/Goal"
+      },
+      "description": "Metas e indicadores de 12 meses do projecto NutriFamily +."
+    },
+    "/families/{familyId}": {
+      "schema": {
+        "$ref": "#/entities/Family"
+      },
+      "description": "Registo de famílias beneficiárias acompanhadas em Quelimane."
+    },
+    "/multipliers/{multiplierId}": {
+      "schema": {
+        "$ref": "#/entities/Multiplier"
+      },
+      "description": "Multiplicadores comunitários activos no programa."
+    },
+    "/activities/{activityId}": {
+      "schema": {
+        "$ref": "#/entities/Activity"
+      },
+      "description": "Relatórios de actividades de campo e formações."
+    },
+    "/documents/{docId}": {
+      "schema": {
+        "$ref": "#/entities/ReportDocument"
+      },
+      "description": "Relatórios e documentos enviados pelo Gestor de Projectos."
+    }
+  }
+}

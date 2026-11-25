@@ -1,0 +1,6 @@
+{
+  "name": "ANDMoz M&A — Plataforma NutriFamily +",
+  "description": "Sistema de Monitoria e Avaliação (M&A) do projecto NutriFamily + da Associação Nutrição em Desenvolvimento (ANDMoz) em Quelimane, Província da Zambézia, Moçambique.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
