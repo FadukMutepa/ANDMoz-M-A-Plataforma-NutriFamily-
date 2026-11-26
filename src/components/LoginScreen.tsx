@@ -1,11 +1,19 @@
 import { useState } from 'react';
-import { ArrowRight, KeyRound, Mail, ShieldCheck, Sprout, UserCheck } from 'lucide-react';
+import {
+  ArrowRight,
+  Database,
+  KeyRound,
+  Mail,
+  ShieldCheck,
+  Sprout,
+  UserCheck,
+} from 'lucide-react';
+import { isSupabaseConfigured } from '../supabaseClient';
 import type { UserRole } from '../types';
 
 interface LoginScreenProps {
   onEmailPasswordLogin: (email: string, password: string) => Promise<void>;
   onDemoLogin: (role: UserRole) => Promise<void>;
-  onGoogleLogin: () => Promise<void>;
   errorMessage: string | null;
   isSigningIn: boolean;
 }
@@ -13,7 +21,6 @@ interface LoginScreenProps {
 export function LoginScreen({
   onEmailPasswordLogin,
   onDemoLogin,
-  onGoogleLogin,
   errorMessage,
   isSigningIn,
 }: LoginScreenProps) {
@@ -30,7 +37,7 @@ export function LoginScreen({
     <div className="min-h-screen bg-[#F8FAF9] flex flex-col items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-7 sm:p-8 shadow-sm">
         {/* Brand Identity */}
-        <div className="flex flex-col items-center text-center mb-7">
+        <div className="flex flex-col items-center text-center mb-6">
           {!logoFailed ? (
             <img
               src="/src/assets/images/andmoz_brand_mark_1795644743489.jpg"
@@ -52,6 +59,22 @@ export function LoginScreen({
           </p>
         </div>
 
+        {/* Supabase Status Note */}
+        <div
+          className={`mb-5 p-3 rounded-lg border text-xs flex items-start gap-2.5 ${
+            isSupabaseConfigured
+              ? 'bg-[#EAF4EB] border-[#C8E6C9] text-[#2E7D32]'
+              : 'bg-amber-50/70 border-amber-200 text-amber-900'
+          }`}
+        >
+          <Database className="w-4 h-4 shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            {isSupabaseConfigured
+              ? 'Ligação ao Supabase activa. Autentique-se com a sua conta institucional registada em public.profiles.'
+              : 'Modo de teste directo (variáveis VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY não definidas). Utilize os acessos de demonstração abaixo.'}
+          </p>
+        </div>
+
         {errorMessage && (
           <div
             role="alert"
@@ -61,7 +84,7 @@ export function LoginScreen({
           </div>
         )}
 
-        {/* Email & Password Form */}
+        {/* Email & Password Form (Supabase Auth) */}
         <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
           <div>
             <label
@@ -112,16 +135,18 @@ export function LoginScreen({
             disabled={isSigningIn}
             className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#2E7D32] hover:bg-[#256628] disabled:opacity-60 text-white text-sm font-semibold rounded-lg transition-colors cursor-pointer"
           >
-            <span>{isSigningIn ? 'A autenticar...' : 'Entrar na Plataforma'}</span>
+            <span>{isSigningIn ? 'A autenticar no Supabase...' : 'Entrar na Plataforma'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        <p className="text-[11px] text-slate-500 text-center mt-3 leading-relaxed">
-          Credenciais de teste: <span className="font-mono-num">gestor@andmoz.org.mz</span> ou{' '}
-          <span className="font-mono-num">admin@andmoz.org.mz</span> · Senha:{' '}
-          <span className="font-mono-num">Andmoz2026!</span>
-        </p>
+        {!isSupabaseConfigured && (
+          <p className="text-[11px] text-slate-500 text-center mt-3 leading-relaxed">
+            Teste directo: <span className="font-mono-num">gestor@andmoz.org.mz</span> ou{' '}
+            <span className="font-mono-num">admin@andmoz.org.mz</span> · Senha:{' '}
+            <span className="font-mono-num">Andmoz2026!</span>
+          </p>
+        )}
 
         {/* Demo Quick Access Divider */}
         <div className="relative my-6">
@@ -175,17 +200,6 @@ export function LoginScreen({
               </div>
             </div>
             <ArrowRight className="w-4 h-4 text-slate-400 shrink-0" />
-          </button>
-        </div>
-
-        <div className="mt-5 pt-4 border-t border-slate-100 text-center">
-          <button
-            type="button"
-            disabled={isSigningIn}
-            onClick={() => void onGoogleLogin()}
-            className="text-xs font-medium text-slate-600 hover:text-[#2E7D32] transition-colors cursor-pointer"
-          >
-            Ou entrar com Conta Google institucional (Administrador)
           </button>
         </div>
       </div>

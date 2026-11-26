@@ -210,19 +210,42 @@ export function DocumentsView({ user, documents, onDemoChange }: DocumentsViewPr
       if (isAdmin) {
         setAdminShowUpload(false);
       }
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao enviar o relatório/documento para o Supabase.'
+      );
     } finally {
       setSaving(false);
     }
   };
 
   const handleMarkReviewed = async (docItem: ReportDocument) => {
-    await updateDocumentStatus(user, docItem.id, 'Revisto', docItem.notes, onDemoChange);
+    try {
+      await updateDocumentStatus(user, docItem.id, 'Revisto', docItem.notes, onDemoChange);
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao marcar o documento como revisto no Supabase.'
+      );
+    }
   };
 
   const handleDelete = async () => {
     if (!deletingDoc || !isAdmin) return;
-    await removeDocumentRecord(user, deletingDoc.id, onDemoChange);
-    setDeletingDoc(null);
+    try {
+      await removeDocumentRecord(user, deletingDoc.id, onDemoChange);
+      setDeletingDoc(null);
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao remover o documento no Supabase.'
+      );
+      setDeletingDoc(null);
+    }
   };
 
   const showInlineForm = !isAdmin || adminShowUpload;

@@ -1,4 +1,4 @@
-import { FileDown, LogOut, Menu } from 'lucide-react';
+import { FileDown, LogOut, Menu, RefreshCw } from 'lucide-react';
 import type { AppSessionUser } from '../types';
 import type { NavSection } from './Sidebar';
 
@@ -7,6 +7,8 @@ interface HeaderProps {
   activeSection: NavSection;
   onOpenMobileMenu: () => void;
   onExportPdf?: () => void;
+  onRefreshData?: () => void;
+  isRefreshing?: boolean;
   onSignOut: () => Promise<void>;
 }
 
@@ -25,6 +27,8 @@ export function Header({
   activeSection,
   onOpenMobileMenu,
   onExportPdf,
+  onRefreshData,
+  isRefreshing,
   onSignOut,
 }: HeaderProps) {
   const initials = user.displayName
@@ -64,6 +68,19 @@ export function Header({
       </div>
 
       <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        {user.authMode === 'supabase' && onRefreshData && (
+          <button
+            type="button"
+            onClick={onRefreshData}
+            disabled={isRefreshing}
+            title="Sincronizar dados do Supabase"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg transition-colors whitespace-nowrap shrink-0 cursor-pointer disabled:opacity-60"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>Actualizar</span>
+          </button>
+        )}
+
         {user.role === 'administrador' && onExportPdf && (
           <button
             type="button"

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
+  AlertCircle,
   Check,
   CheckCircle2,
   Clock,
@@ -82,6 +83,7 @@ export function AdminEditHubView({
   const [clubFilter, setClubFilter] = useState<string>('all');
   const [validationFilter, setValidationFilter] = useState<ValidationFilter>('all');
   const [savedNotice, setSavedNotice] = useState<string | null>(null);
+  const [errorNotice, setErrorNotice] = useState<string | null>(null);
 
   const [editingFamily, setEditingFamily] = useState<Family | null>(null);
   const [editingMultiplier, setEditingMultiplier] = useState<Multiplier | null>(null);
@@ -89,8 +91,14 @@ export function AdminEditHubView({
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   const notifySaved = (msg: string) => {
+    setErrorNotice(null);
     setSavedNotice(msg);
     window.setTimeout(() => setSavedNotice(null), 3500);
+  };
+
+  const notifyError = (err: unknown, fallback: string) => {
+    setSavedNotice(null);
+    setErrorNotice(err instanceof Error ? err.message : fallback);
   };
 
   const communityOptions = useMemo(() => {
@@ -200,6 +208,8 @@ export function AdminEditHubView({
           ? `Família ${f.code} marcada como Validada pela Administração.`
           : `Validação removida da família ${f.code}.`
       );
+    }).catch((err) => {
+      notifyError(err, 'Não foi possível validar o registo da família.');
     });
   };
 
@@ -237,6 +247,8 @@ export function AdminEditHubView({
           ? `Multiplicador ${m.code} marcado como Validado pela Administração.`
           : `Validação removida do multiplicador ${m.code}.`
       );
+    }).catch((err) => {
+      notifyError(err, 'Não foi possível validar o registo do multiplicador.');
     });
   };
 
@@ -395,6 +407,23 @@ export function AdminEditHubView({
         <div className="p-3 rounded-lg bg-[#EAF4EB] border border-[#C8E6C9] text-xs font-medium text-[#2E7D32] flex items-center gap-2">
           <Check className="w-4 h-4 shrink-0" />
           <span>{savedNotice}</span>
+        </div>
+      )}
+
+      {errorNotice && (
+        <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs font-medium text-red-700 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorNotice}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setErrorNotice(null)}
+            className="text-red-500 hover:text-red-700 cursor-pointer"
+            aria-label="Fechar erro"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       )}
 
@@ -564,9 +593,11 @@ export function AdminEditHubView({
                         <button
                           type="button"
                           onClick={() =>
-                            void removeFamilyRecord(user, f.id, onDemoChange).then(() =>
-                              notifySaved(`Família ${f.code} removida.`)
-                            )
+                            void removeFamilyRecord(user, f.id, onDemoChange)
+                              .then(() => notifySaved(`Família ${f.code} removida.`))
+                              .catch((err) =>
+                                notifyError(err, `Não foi possível remover a família ${f.code}.`)
+                              )
                           }
                           className="p-1.5 text-slate-400 hover:text-red-700 rounded-md cursor-pointer"
                           aria-label={`Remover ${f.code}`}
@@ -656,9 +687,14 @@ export function AdminEditHubView({
                         <button
                           type="button"
                           onClick={() =>
-                            void removeMultiplierRecord(user, m.id, onDemoChange).then(() =>
-                              notifySaved(`Multiplicador ${m.code} removido.`)
-                            )
+                            void removeMultiplierRecord(user, m.id, onDemoChange)
+                              .then(() => notifySaved(`Multiplicador ${m.code} removido.`))
+                              .catch((err) =>
+                                notifyError(
+                                  err,
+                                  `Não foi possível remover o multiplicador ${m.code}.`
+                                )
+                              )
                           }
                           className="p-1.5 text-slate-400 hover:text-red-700 rounded-md cursor-pointer"
                           aria-label={`Remover ${m.code}`}
@@ -705,9 +741,11 @@ export function AdminEditHubView({
                       <button
                         type="button"
                         onClick={() =>
-                          void removeActivityRecord(user, a.id, onDemoChange).then(() =>
-                            notifySaved('Actividade removida.')
-                          )
+                          void removeActivityRecord(user, a.id, onDemoChange)
+                            .then(() => notifySaved('Actividade removida.'))
+                            .catch((err) =>
+                              notifyError(err, 'Não foi possível remover a actividade.')
+                            )
                         }
                         className="p-1.5 text-slate-400 hover:text-red-700 rounded-md cursor-pointer"
                         aria-label={`Remover ${a.title}`}
@@ -755,9 +793,11 @@ export function AdminEditHubView({
                       <button
                         type="button"
                         onClick={() =>
-                          void removeGoalRecord(user, g.id, onDemoChange).then(() =>
-                            notifySaved(`Meta ${g.code} removida.`)
-                          )
+                          void removeGoalRecord(user, g.id, onDemoChange)
+                            .then(() => notifySaved(`Meta ${g.code} removida.`))
+                            .catch((err) =>
+                              notifyError(err, `Não foi possível remover a meta ${g.code}.`)
+                            )
                         }
                         className="p-1.5 text-slate-400 hover:text-red-700 rounded-md cursor-pointer"
                         aria-label={`Remover ${g.code}`}
@@ -1064,6 +1104,8 @@ export function AdminEditHubView({
                   ).then(() => {
                     setEditingFamily(null);
                     notifySaved(`Família ${f.code} actualizada.`);
+                  }).catch((err) => {
+                    notifyError(err, `Não foi possível actualizar a família ${f.code}.`);
                   });
                 }}
                 className="px-4 py-2 text-xs font-semibold text-white bg-[#2E7D32] rounded-lg cursor-pointer"
@@ -1359,6 +1401,8 @@ export function AdminEditHubView({
                   ).then(() => {
                     setEditingMultiplier(null);
                     notifySaved(`Multiplicador ${m.code} actualizado.`);
+                  }).catch((err) => {
+                    notifyError(err, `Não foi possível actualizar o multiplicador ${m.code}.`);
                   });
                 }}
                 className="px-4 py-2 text-xs font-semibold text-white bg-[#2E7D32] rounded-lg cursor-pointer"
@@ -1480,6 +1524,8 @@ export function AdminEditHubView({
                   ).then(() => {
                     setEditingActivity(null);
                     notifySaved('Actividade actualizada com sucesso.');
+                  }).catch((err) => {
+                    notifyError(err, 'Não foi possível actualizar a actividade.');
                   });
                 }}
                 className="px-4 py-2 text-xs font-semibold text-white bg-[#2E7D32] rounded-lg cursor-pointer"
@@ -1606,6 +1652,8 @@ export function AdminEditHubView({
                   ).then(() => {
                     setEditingGoal(null);
                     notifySaved(`Meta ${g.code} actualizada.`);
+                  }).catch((err) => {
+                    notifyError(err, `Não foi possível actualizar a meta ${g.code}.`);
                   });
                 }}
                 className="px-4 py-2 text-xs font-semibold text-white bg-[#2E7D32] rounded-lg cursor-pointer"

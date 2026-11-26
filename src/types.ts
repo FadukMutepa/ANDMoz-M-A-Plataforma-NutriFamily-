@@ -1,5 +1,3 @@
-import type { Timestamp } from 'firebase/firestore';
-
 export type UserRole = 'gestor' | 'administrador';
 
 export interface AppSessionUser {
@@ -7,7 +5,7 @@ export interface AppSessionUser {
   displayName: string;
   email: string;
   role: UserRole;
-  authMode: 'firebase' | 'demo';
+  authMode: 'supabase' | 'demo';
   photoURL?: string | null;
 }
 
@@ -65,8 +63,8 @@ export interface UserWorkspace {
   displayName: string;
   roleTitle: string;
   seeded: boolean;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Goal {
@@ -81,8 +79,8 @@ export interface Goal {
   targetMonth: number;
   status: GoalStatus;
   notes: string;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Family {
@@ -106,8 +104,8 @@ export interface Family {
   notes: string;
   enrolledMonth: number;
   adminValidated: boolean;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Multiplier {
@@ -128,8 +126,8 @@ export interface Multiplier {
   status: MultiplierStatus;
   notes: string;
   adminValidated: boolean;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Activity {
@@ -146,8 +144,8 @@ export interface Activity {
   childrenCount: number;
   summary: string;
   status: ActivityStatus;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface ReportDocument {
@@ -166,8 +164,8 @@ export interface ReportDocument {
   contentDataUrl: string;
   notes: string;
   status: DocumentStatus;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export const QUELIMANE_COMMUNITIES: string[] = [

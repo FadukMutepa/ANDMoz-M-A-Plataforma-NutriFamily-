@@ -87,12 +87,12 @@ export function AdminSettingsModal({
         <div className="border border-slate-200 rounded-lg p-4 bg-[#F8FAF9] space-y-2 text-xs">
           <div className="flex items-center gap-2 font-semibold text-slate-800">
             <Database className="w-4 h-4 text-[#2E7D32]" />
-            <span>Estado da Persistência de Dados</span>
+            <span>Estado da Base de Dados</span>
           </div>
           <p className="text-slate-600 leading-relaxed">
-            {user.authMode === 'firebase'
-              ? 'Sincronização activa com Firebase Firestore e cópia local de demonstração em localStorage.'
-              : 'Persistência local activa em localStorage do navegador entre recarregamentos da página.'}
+            {user.authMode === 'supabase'
+              ? 'Ligação activa ao Supabase (PostgreSQL e Autenticação) nas tabelas public.familias, public.multiplicadores e public.documentos_atividades.'
+              : 'Modo de teste directo em memória da sessão (configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para persistência no Supabase).'}
           </p>
           <p className="text-slate-500 font-mono-num pt-1">
             Registos actuais: {familiesCount} famílias · {multipliersCount} multiplicadores ·{' '}

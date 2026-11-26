@@ -191,6 +191,12 @@ export function FamiliesView({
       if (isAdmin) {
         setAdminShowCreateForm(false);
       }
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao guardar a família. Verifique a ligação ao Supabase.'
+      );
     } finally {
       setSaving(false);
     }
@@ -238,6 +244,12 @@ export function FamiliesView({
         onDemoChange
       );
       setEditingFamily(null);
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao actualizar o registo da família no Supabase.'
+      );
     } finally {
       setSaving(false);
     }
@@ -245,8 +257,17 @@ export function FamiliesView({
 
   const handleDelete = async () => {
     if (!deletingFamily || !isAdmin) return;
-    await removeFamilyRecord(user, deletingFamily.id, onDemoChange);
-    setDeletingFamily(null);
+    try {
+      await removeFamilyRecord(user, deletingFamily.id, onDemoChange);
+      setDeletingFamily(null);
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao remover a família no Supabase.'
+      );
+      setDeletingFamily(null);
+    }
   };
 
   const handleExport = () => {

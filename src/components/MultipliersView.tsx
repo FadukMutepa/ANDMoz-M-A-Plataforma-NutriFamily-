@@ -165,6 +165,12 @@ export function MultipliersView({
       if (isAdmin) {
         setAdminShowForm(false);
       }
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao registar o multiplicador no Supabase.'
+      );
     } finally {
       setSaving(false);
     }
@@ -205,6 +211,12 @@ export function MultipliersView({
         onDemoChange
       );
       setEditingMultiplier(null);
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao actualizar o multiplicador no Supabase.'
+      );
     } finally {
       setSaving(false);
     }
@@ -212,8 +224,17 @@ export function MultipliersView({
 
   const handleDelete = async () => {
     if (!deletingMultiplier || !isAdmin) return;
-    await removeMultiplierRecord(user, deletingMultiplier.id, onDemoChange);
-    setDeletingMultiplier(null);
+    try {
+      await removeMultiplierRecord(user, deletingMultiplier.id, onDemoChange);
+      setDeletingMultiplier(null);
+    } catch (err) {
+      setFormError(
+        err instanceof Error
+          ? err.message
+          : 'Erro ao remover o multiplicador no Supabase.'
+      );
+      setDeletingMultiplier(null);
+    }
   };
 
   const handleExportCsv = () => {
