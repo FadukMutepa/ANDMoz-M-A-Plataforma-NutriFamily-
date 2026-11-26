@@ -27,8 +27,6 @@ import { AdminEditHubView } from './components/AdminEditHubView';
 import { GestorDashboard } from './components/GestorDashboard';
 import { AdminSettingsModal } from './components/AdminSettingsModal';
 
-const DEMO_PASS = 'Andmoz2026!';
-
 function mapProfileRole(rawRole: unknown): UserRole {
   const normalized = String(rawRole || '')
     .trim()
@@ -272,65 +270,6 @@ function MainApp() {
     }
   }, [activeSection, sessionUser]);
 
-  const startDemoSession = (role: UserRole, customEmail?: string) => {
-    const demoUser: AppSessionUser =
-      role === 'administrador'
-        ? {
-            uid: 'demo_admin',
-            displayName: 'Faduko Oliveira (Coordenação)',
-            email: customEmail || 'admin@andmoz.org.mz',
-            role: 'administrador',
-            authMode: 'demo',
-          }
-        : {
-            uid: 'demo_gestor',
-            displayName: 'Carlos Machava (Campo)',
-            email: customEmail || 'gestor@andmoz.org.mz',
-            role: 'gestor',
-            authMode: 'demo',
-          };
-
-    setDataError(null);
-    setAuthError(null);
-    setStore(createInitialMemoryStore());
-    setSessionUser(demoUser);
-    setActiveSection(role === 'administrador' ? 'dashboard' : 'families');
-  };
-
-  const handleDemoLogin = async (role: UserRole) => {
-    setIsSigningIn(true);
-    setAuthError(null);
-    const email = role === 'administrador' ? 'admin@andmoz.org.mz' : 'gestor@andmoz.org.mz';
-
-    try {
-      if (isSupabaseConfigured) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password: DEMO_PASS,
-        });
-
-        if (!error && data.user) {
-          try {
-            const profile = await fetchUserProfile(
-              data.user.id,
-              data.user.email || email
-            );
-            setSessionUser(profile);
-            setActiveSection(profile.role === 'administrador' ? 'dashboard' : 'families');
-            return;
-          } catch {
-            await supabase.auth.signOut();
-          }
-        }
-      }
-
-      // Fallback claro para teste directo sem contas demo configuradas no Supabase
-      startDemoSession(role, email);
-    } finally {
-      setIsSigningIn(false);
-    }
-  };
-
   const handleEmailPasswordLogin = async (email: string, password: string) => {
     setIsSigningIn(true);
     setAuthError(null);
@@ -343,59 +282,48 @@ function MainApp() {
     }
 
     try {
-      if (isSupabaseConfigured) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: cleanEmail,
-          password,
-        });
-
-        if (error) {
-          setAuthError(translateAuthError(error.message));
-          return;
-        }
-
-        if (!data.user) {
-          setAuthError('Não foi possível obter os dados do utilizador autenticado.');
-          return;
-        }
-
-        try {
-          const profile = await fetchUserProfile(
-            data.user.id,
-            data.user.email || cleanEmail,
-            typeof data.user.user_metadata?.nome === 'string'
-              ? data.user.user_metadata.nome
-              : undefined
-          );
-          setSessionUser(profile);
-          setActiveSection(profile.role === 'administrador' ? 'dashboard' : 'families');
-          return;
-        } catch (profileErr) {
-          await supabase.auth.signOut();
-          setAuthError(
-            profileErr instanceof Error
-              ? profileErr.message
-              : 'Perfil não encontrado na tabela public.profiles.'
-          );
-          return;
-        }
-      }
-
-      // Modo de teste directo quando variáveis Supabase não estão configuradas
-      if (
-        (cleanEmail === 'admin@andmoz.org.mz' || cleanEmail === 'gestor@andmoz.org.mz') &&
-        password === DEMO_PASS
-      ) {
-        startDemoSession(
-          cleanEmail === 'admin@andmoz.org.mz' ? 'administrador' : 'gestor',
-          cleanEmail
+      if (!isSupabaseConfigured) {
+        setAuthError(
+          'Ligação ao Supabase não configurada neste ambiente. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY.'
         );
         return;
       }
 
-      setAuthError(
-        `Variáveis Supabase não configuradas neste ambiente. Para testar directamente utilize gestor@andmoz.org.mz ou admin@andmoz.org.mz com a senha "${DEMO_PASS}", ou os botões abaixo.`
-      );
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
+
+      if (error) {
+        setAuthError(translateAuthError(error.message));
+        return;
+      }
+
+      if (!data.user) {
+        setAuthError('Não foi possível obter os dados do utilizador autenticado.');
+        return;
+      }
+
+      try {
+        const profile = await fetchUserProfile(
+          data.user.id,
+          data.user.email || cleanEmail,
+          typeof data.user.user_metadata?.nome === 'string'
+            ? data.user.user_metadata.nome
+            : undefined
+        );
+        setSessionUser(profile);
+        setActiveSection(profile.role === 'administrador' ? 'dashboard' : 'families');
+        return;
+      } catch (profileErr) {
+        await supabase.auth.signOut();
+        setAuthError(
+          profileErr instanceof Error
+            ? profileErr.message
+            : 'Perfil não encontrado na tabela public.profiles.'
+        );
+        return;
+      }
     } finally {
       setIsSigningIn(false);
     }
@@ -428,7 +356,6 @@ function MainApp() {
     return (
       <LoginScreen
         onEmailPasswordLogin={handleEmailPasswordLogin}
-        onDemoLogin={handleDemoLogin}
         errorMessage={authError}
         isSigningIn={isSigningIn}
       />
