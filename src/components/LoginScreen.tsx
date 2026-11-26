@@ -66,27 +66,15 @@ export function LoginScreen({
                 </div>
               )}
 
-              <h1 className="font-display text-2xl font-bold text-slate-900 tracking-[0.06em] [text-wrap:balance]">
-                AND MOZ
-              </h1>
-              <p className="text-xs font-medium text-slate-600 mt-1.5">
+              <h1 className="text-sm font-semibold text-slate-800 mt-1 [text-wrap:balance]">
                 Associação Nutrição em Desenvolvimento
-              </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              </h1>
+              <p className="text-xs text-slate-500 mt-0.5">
                 Quelimane · Província da Zambézia
               </p>
             </div>
 
             <div className="my-6 border-t border-slate-100" />
-
-            <div className="mb-5 text-center">
-              <h2 className="text-sm font-semibold text-slate-900">
-                Acesso à Plataforma
-              </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                Introduza as suas credenciais institucionais para continuar.
-              </p>
-            </div>
 
             {errorMessage && (
               <div
